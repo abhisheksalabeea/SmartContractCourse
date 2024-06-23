@@ -10,9 +10,26 @@ contract ProposalContract {
         uint256 reject; // Number of reject votes
         uint256 pass; // Number of pass votes
         uint256 total_vote_to_end; // When the total votes in the proposal reaches this limit, proposal ends
-        bool current_state; // This shows the current state of the proposal, meaning whether if passes of fails
+        bool current_state; // This shows the current state of the proposal, meaning whether it passes or fails
         bool is_active; // This shows if others can vote to our contract
     }
 
-    mapping(uint256 => Proposal) proposal_history; // Recordings of previous proposals
+    mapping(uint256 => Proposal) public proposal_history; // Recordings of previous proposals
+    uint256 public proposal_count; // Counter for the number of proposals
+
+    // Function to create a new proposal
+    function create(string memory title, string memory description, uint256 totalVotesToEnd) external {
+        uint256 proposalId = proposal_count;
+        proposal_history[proposalId] = Proposal({
+            title: title,
+            description: description,
+            approve: 0,
+            reject: 0,
+            pass: 0,
+            total_vote_to_end: totalVotesToEnd,
+            current_state: true, // Assuming new proposal starts in active state
+            is_active: true
+        });
+        proposal_count++;
+    }
 }
