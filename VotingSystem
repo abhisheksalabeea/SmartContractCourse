@@ -32,4 +32,23 @@ contract ProposalContract {
         });
         proposal_count++;
     }
+
+    // Custom logic to calculate the state of a proposal
+    function calculateProposalState(uint256 proposalId) public view returns (string memory) {
+        Proposal storage proposal = proposal_history[proposalId];
+        
+        // Calculate total votes
+        uint256 totalVotes = proposal.approve + proposal.reject + proposal.pass;
+        
+        // Determine the custom logic for proposal state
+        if (totalVotes >= proposal.total_vote_to_end) {
+            if (proposal.approve > proposal.reject) {
+                return "Proposal Succeeded";
+            } else {
+                return "Proposal Failed";
+            }
+        } else {
+            return "Proposal In Progress";
+        }
+    }
 }
